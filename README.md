@@ -29,6 +29,13 @@ Some prompts to answer:
 
 You can include a simple diagram or bullet list if helpful.
 
+Answer:
+Real-world music recommendation systems usually combine many signals, such as what users clicked, skipped, replayed, and liked, plus song-level attributes like genre, mood, tempo, and energy. They score each candidate song by estimating how well it matches a listener's current taste and then rank songs from best match to weakest match. My version will prioritize transparent, content-based scoring: it will focus on matching user preferences for genre, mood, and core numeric vibe features (especially energy and valence), so the recommendations are easy to explain and debug.
+
+Song features used: genre, mood, energy, tempo_bpm, valence, danceability, and acousticness.
+UserProfile features used: preferred_genre, preferred_mood, target_energy, target_tempo_bpm, and target_valence.
+
+
 ---
 
 ## Getting Started

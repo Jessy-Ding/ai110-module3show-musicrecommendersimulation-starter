@@ -20,20 +20,45 @@ except ImportError:
 
 
 def _print_top_recommendations(profile_name: str, recommendations) -> None:
-    """Prints top recommendations for one profile in a readable block."""
-    print(f"\n=== Profile: {profile_name} ===\n")
+    """Prints top recommendations for one profile as an ASCII summary table."""
+
+    def _build_separator(widths) -> str:
+        return "+" + "+".join("-" * (w + 2) for w in widths) + "+"
+
+    def _build_row(values, widths) -> str:
+        cells = [f" {str(value):<{widths[idx]}} " for idx, value in enumerate(values)]
+        return "|" + "|".join(cells) + "|"
+
+    headers = ["#", "Title", "Artist", "Genre", "Mood", "Score", "Reasons"]
+    rows = []
     for index, rec in enumerate(recommendations, start=1):
         song, score, explanation = rec
-        reasons = [r.strip() for r in explanation.split(",") if r.strip()]
+        reasons = "; ".join(r.strip() for r in explanation.split(",") if r.strip())
+        rows.append(
+            [
+                index,
+                song["title"],
+                song["artist"],
+                song["genre"],
+                song["mood"],
+                f"{score:.2f}",
+                reasons,
+            ]
+        )
 
-        print(f"{index}. {song['title']} by {song['artist']}")
-        print(f"   Score  : {score:.2f}")
-        print(f"   Genre  : {song['genre']}")
-        print(f"   Mood   : {song['mood']}")
-        print("   Reasons:")
-        for reason in reasons:
-            print(f"   - {reason}")
-        print()
+    widths = [
+        max(len(str(headers[idx])), max((len(str(row[idx])) for row in rows), default=0))
+        for idx in range(len(headers))
+    ]
+
+    print(f"\n=== Profile: {profile_name} ===")
+    separator = _build_separator(widths)
+    print(separator)
+    print(_build_row(headers, widths))
+    print(separator)
+    for row in rows:
+        print(_build_row(row, widths))
+    print(separator)
 
 
 def _parse_args() -> argparse.Namespace:

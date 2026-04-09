@@ -11,25 +11,12 @@ Your goal is to:
 - Evaluate what your system gets right and wrong
 - Reflect on how this mirrors real world AI recommenders
 
-Replace this paragraph with your own summary of what your version does.
+This version builds a transparent, rule-based recommender that scores each song with genre, mood, and audio-feature similarity, then returns top-k songs with explanation reasons. I also tested adversarial profiles and small logic changes to study sensitivity, bias, and failure modes.
 
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
-
-Some prompts to answer:
-
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
-
-You can include a simple diagram or bullet list if helpful.
-
-Answer:
 My recommender uses a transparent, rule-based scoring recipe. For each song in the catalog, it computes a match score against a user taste profile and then ranks songs from highest score to lowest score.
 
 Algorithm recipe:
@@ -175,7 +162,7 @@ python -m src.main
 
 ### Running Tests
 
-Run the starter tests with:
+Run tests with:
 
 ```bash
 pytest
@@ -187,144 +174,111 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+### System Evaluation: Intuition Check
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+I compared model outputs against my own listening intuition with two profiles that reflect real-life mood regulation goals.
+
+Profile A was a calm mode profile (classical + pop preferences, relaxed/chill moods, moderate energy, higher acousticness). Profile B was a courage mode profile (pop-forward preferences, confident/euphoric/happy moods, higher energy and tempo). For each profile, I reviewed the top-5 recommendations and checked whether the songs felt appropriate for the intended emotional state.
+
+The courage mode results felt mostly right. The top recommendations were pop-leaning and emotionally uplifting, which matched my expectation for songs that help me become more motivated and confident. The calm mode results were only partially right. The emotional tone was often calm, but genre alignment drifted toward jazz/country/lofi in top positions, and classical appeared lower than expected.
+
+This experiment suggests the current scoring logic is better at matching mood and numeric audio targets than matching fine-grained style intent (for example, piano-classical preference). A practical improvement is to treat calm mode and courage mode as separate user states rather than one mixed profile, then compare outputs per state.
+
+### Small Data Sensitivity Experiment
+
+I tested one controlled change to check sensitivity:
+
+- **Weight Shift** (temporary experiment):
+  - doubled `energy_proximity` in the balanced scheme (`0.16 -> 0.32`)
+  - halved `genre_match` in the balanced scheme (`0.24 -> 0.12`)
+
+I then re-ran `main.py` with the default demo profile and compared top-5 results.
+
+Baseline top-5 (`high_energy_pop` / default balanced):
+1. Neon Pulse
+2. Neon Letters
+3. Lunar Boulevard
+4. Neon Skyline
+5. Silver Horizon
+
+Experimental top-5 (after weight shift):
+1. Neon Pulse
+2. Neon Letters
+3. Neon Skyline
+4. Neon Rhythm
+5. Lunar Boulevard
+
+What this change showed:
+
+- The system became more energy-driven and less genre-anchored.
+- Rankings shifted toward tracks with stronger energy proximity, even without direct genre matches.
+- Top-1 did not change, but positions 3-5 changed noticeably.
+
+Interpretation:
+
+- This looked **more different than more accurate**. The change increased responsiveness to energy, but it also reduced style consistency for users who care strongly about genre identity.
+- The recommender is **moderately sensitive** to weight changes: a single weight edit can reorder several top results while preserving the strongest winner.
+
+Note: this was a temporary experiment. I reverted the balanced weights back to default values after recording results.
+
+### Bias Mitigation Experiment (Implemented)
+
+I implemented two mitigation changes in the scoring logic and re-ran all profiles:
+
+- **Adaptive exclusion penalty**: excluded genres now receive a stronger penalty when category matches are also strong.
+- **Tolerance floor for numeric proximity**: very small/zero tolerances are floored to avoid all-or-nothing score cliffs.
+
+Observed impact (before vs after):
+
+- In `self_contradict_exclude_only_genre`, top results shifted away from excluded `metal` tracks; the new top-1 became a non-excluded song (`Silver Boulevard`, rock).
+- In `zero_tolerance_trap`, top-1 remained stable (`Velvet Horizon`), but lower ranks became less brittle, with fewer near-zero collapses.
+
+Interpretation:
+
+- These mitigations improved robustness and user-control consistency without breaking normal-profile behavior.
+- The change looked **more accurate** for contradictory profiles (especially exclusion handling), and **more stable** for narrow-tolerance users.
+- Residual risk remains: strong categorical anchors can still reduce diversity when user preferences are highly concentrated.
+
+### Why Each #1 Song Ranked First (Based on Current Weights)
+
+Code references used for this analysis:
+- Weight definitions: `src/recommender.py` (around line 6)
+- Main dict-scoring logic: `src/recommender.py` (around line 158)
+- Numeric proximity accumulation: `src/recommender.py` (around line 200)
+- Diversity re-ranking step: `src/recommender.py` (around line 249)
+
+Short per-profile explanation (top song only):
+
+1. `high_energy_pop` -> **Neon Pulse** is #1 because it gets both full categorical anchors (`genre + mood`) plus strong proximity on all five numeric features. It beats #2 mainly because #2 has mood match but no direct genre match.
+2. `chill_lofi` -> **Velvet Horizon** is #1 because it also gets full categorical matches (`lofi + chill`) and consistently good numeric proximity, giving it a stable lead over #2.
+3. `deep_intense_rock` -> **Silver Boulevard** is #1 because conservative mode gives a stronger genre weight, and this track has both `rock` and `intense` matches.
+4. `conflict_energy_sad` -> **Neon Pulse** is #1 mostly due to genre match. Mood and most numeric terms are near zero, which shows how categorical anchors can dominate in contradictory profiles.
+5. `self_contradict_exclude_only_genre` -> **Silver Boulevard** is now #1 after mitigation, because adaptive exclusion penalties push excluded `metal` tracks down and allow a non-excluded `intense` match to lead.
+6. `zero_tolerance_trap` -> **Velvet Horizon** reaches `1.00` because exact matches get full credit and near-matches collapse to zero under zero tolerances.
+7. `novelty_max_no_prefs` -> **Crystal Boulevard** is #1 because ranking is mostly numeric proximity plus the novelty bonus (`+0.08`) when genre/mood preferences are empty.
+
+Overall pattern: repeated #1 songs are usually caused by strong categorical anchors (especially genre in conservative or balanced settings) and limited catalog diversity.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
+This recommender has clear limits:
 
-Examples:
+- The catalog is small, so recommendations can repeat.
+- It does not use lyrics, language, artist history, or user listening history.
+- Strong category matches can still dominate in some contradictory profiles.
+- Very narrow tolerances can make ranking brittle without mitigation.
 
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+I discuss these risks in more detail in `model_card.md`.
 
 ---
 
 ## Reflection
 
-Read and complete `model_card.md`:
+See [model_card.md](model_card.md) for full model documentation.
 
-[**Model Card**](model_card.md)
+This project showed me how recommenders turn simple user preferences into ranking decisions. Even basic additive scoring can feel meaningful when genre, mood, and energy align with user intent.
 
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
-
-
----
-
-## 7. `model_card_template.md`
-
-Combines reflection and model card framing from the Module 3 guidance. :contentReference[oaicite:2]{index=2}  
-
-```markdown
-# 🎧 Model Card - Music Recommender Simulation
-
-## 1. Model Name
-
-Give your recommender a name, for example:
-
-> VibeFinder 1.0
-
----
-
-## 2. Intended Use
-
-- What is this system trying to do
-- Who is it for
-
-Example:
-
-> This model suggests 3 to 5 songs from a small catalog based on a user's preferred genre, mood, and energy level. It is for classroom exploration only, not for real users.
-
----
-
-## 3. How It Works (Short Explanation)
-
-Describe your scoring logic in plain language.
-
-- What features of each song does it consider
-- What information about the user does it use
-- How does it turn those into a number
-
-Try to avoid code in this section, treat it like an explanation to a non programmer.
-
----
-
-## 4. Data
-
-Describe your dataset.
-
-- How many songs are in `data/songs.csv`
-- Did you add or remove any songs
-- What kinds of genres or moods are represented
-- Whose taste does this data mostly reflect
-
----
-
-## 5. Strengths
-
-Where does your recommender work well
-
-You can think about:
-- Situations where the top results "felt right"
-- Particular user profiles it served well
-- Simplicity or transparency benefits
-
----
-
-## 6. Limitations and Bias
-
-Where does your recommender struggle
-
-Some prompts:
-- Does it ignore some genres or moods
-- Does it treat all users as if they have the same taste shape
-- Is it biased toward high energy or one genre by default
-- How could this be unfair if used in a real product
-
----
-
-## 7. Evaluation
-
-How did you check your system
-
-Examples:
-- You tried multiple user profiles and wrote down whether the results matched your expectations
-- You compared your simulation to what a real app like Spotify or YouTube tends to recommend
-- You wrote tests for your scoring logic
-
-You do not need a numeric metric, but if you used one, explain what it measures.
-
----
-
-## 8. Future Work
-
-If you had more time, how would you improve this recommender
-
-Examples:
-
-- Add support for multiple users and "group vibe" recommendations
-- Balance diversity of songs instead of always picking the closest match
-- Use more features, like tempo ranges or lyric themes
-
----
-
-## 9. Personal Reflection
-
-A few sentences about what you learned:
-
-- What surprised you about how your system behaved
-- How did building this change how you think about real music recommenders
-- Where do you think human judgment still matters, even if the model seems "smart"
+I also learned that bias can appear quickly. Small design choices (like strong category anchors or strict tolerances) can make results repetitive or brittle, so testing with contradictory and edge-case profiles is essential.
 

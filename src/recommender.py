@@ -160,6 +160,8 @@ def _score_song_dict(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     scheme = _get_weight_scheme(user_prefs)
     score = 0.0
     reasons: List[str] = []
+    genre_contribution = 0.0
+    mood_contribution = 0.0
 
     # Accept both new schema (preferred_genres) and legacy key (favorite_genre).
     preferred_genres: Dict[str, float] = {
@@ -182,18 +184,19 @@ def _score_song_dict(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
 
     genre_weight = _weighted_lookup(genre, preferred_genres)
     if genre_weight > 0:
-        contribution = scheme["genre_match"] * min(1.0, genre_weight)
-        score += contribution
-        reasons.append(f"genre match (+{contribution:.2f})")
+        genre_contribution = scheme["genre_match"] * min(1.0, genre_weight)
+        score += genre_contribution
+        reasons.append(f"genre match (+{genre_contribution:.2f})")
 
     mood_weight = _weighted_lookup(mood, favorite_moods)
     if mood_weight > 0:
-        contribution = scheme["mood_match"] * min(1.0, mood_weight)
-        score += contribution
-        reasons.append(f"mood match (+{contribution:.2f})")
+        mood_contribution = scheme["mood_match"] * min(1.0, mood_weight)
+        score += mood_contribution
+        reasons.append(f"mood match (+{mood_contribution:.2f})")
 
     if genre in excluded_genres:
-        contribution = -0.20
+        # Adaptive exclusion is stronger when category matches are also strong.
+        contribution = -(0.20 + (0.60 * genre_contribution) + (0.40 * mood_contribution))
         score += contribution
         reasons.append(f"excluded genre ({contribution:.2f})")
 
@@ -209,7 +212,10 @@ def _score_song_dict(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
         if target_key in user_prefs:
             value = float(song[feature])
             target = float(user_prefs[target_key])
-            tolerance = float(user_prefs.get(tolerance_key, default_tolerance))
+            raw_tolerance = float(user_prefs.get(tolerance_key, default_tolerance))
+            # Floor tiny tolerances to avoid brittle all-or-nothing cliffs.
+            tolerance_floor = max(1e-6, default_tolerance * 0.20)
+            tolerance = max(raw_tolerance, tolerance_floor)
             closeness = _closeness(value, target, tolerance)
             contribution = scheme[weight_key] * closeness
             score += contribution

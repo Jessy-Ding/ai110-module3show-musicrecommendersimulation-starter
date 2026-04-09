@@ -158,19 +158,19 @@ python -m src.main
 ### Terminal Output Screenshot
 
 
-![Terminal high_energy output](docs/images/high_energy.png)
+![Terminal high_energy output](/docs/images/high_energy.png)
 
-![Terminal chill_lofi output](docs/images/chill_lofi.png)
+![Terminal chill_lofi output](/docs/images/chill_lofi.png)
 
-![Terminal deep_intense_rock output](docs/images/deep_intense_rock.png)
+![Terminal deep_intense_rock output](/docs/images/deep_intense_rock.png)
 
-![Terminal novelty_max_no_prefs output](docs/images/novelty_max_no_prefs.png)
+![Terminal novelty_max_no_prefs output](/docs/images/novelty_max_no_prefs.png)
 
-![Terminal conflict_energy_sad output](docs/images/conflict_energy_sad.png)
+![Terminal conflict_energy_sad output](/docs/images/conflict_energy_sad.png)
 
-![Terminal self_contradict_exclude_only_genre output](docs/images/self_contradict_exclude_only_genre.png)
+![Terminal self_contradict_exclude_only_genre output](/docs/images/self_contradict_exclude_only_genre.png)
 
-![Terminal zero_tolerance_trap output](docs/images/zero_tolerance_trap.png)
+![Terminal zero_tolerance_trap output](/docs/images/zero_tolerance_trap.png)
 
 
 ### Running Tests

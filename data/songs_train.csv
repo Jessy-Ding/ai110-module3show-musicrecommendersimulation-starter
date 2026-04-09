@@ -1,0 +1,81 @@
+id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
+16,Golden Letters,River Theory,ambient,relaxed,0.21,58,0.64,0.36,0.94
+17,Lunar Memory,Nova Harbor,ambient,moody,0.31,61,0.53,0.40,0.91
+18,Midnight Skyline,City Script,ambient,focused,0.31,61,0.61,0.41,0.89
+19,Solar Rhythm,Paper Atlas,ambient,reflective,0.17,58,0.54,0.35,0.98
+61,Silver Boulevard,Static Bloom,blues,intense,0.52,95,0.35,0.50,0.70
+62,Golden Circuit,Glass Motel,blues,relaxed,0.37,73,0.47,0.42,0.80
+63,Lunar Letters,Aurora Line,blues,moody,0.47,86,0.35,0.45,0.76
+64,Midnight Memory,Night Signal,blues,focused,0.38,86,0.40,0.49,0.78
+46,Wild Skyline,Paper Atlas,classical,euphoric,0.30,82,0.53,0.32,0.91
+47,Neon Rhythm,River Theory,classical,happy,0.27,72,0.53,0.30,0.92
+48,Velvet Pulse,Nova Harbor,classical,chill,0.17,58,0.47,0.21,0.98
+49,Silver Canvas,City Script,classical,intense,0.35,81,0.41,0.27,0.89
+86,Crystal Boulevard,Paper Atlas,country,confident,0.52,107,0.71,0.68,0.45
+87,Urban Circuit,River Theory,country,nostalgic,0.44,93,0.66,0.59,0.53
+88,Wild Letters,Nova Harbor,country,euphoric,0.62,109,0.77,0.67,0.40
+89,Neon Memory,City Script,country,happy,0.59,106,0.77,0.65,0.41
+71,Lunar Skyline,Glass Motel,drum and bass,moody,0.97,167,0.62,0.84,0.08
+72,Midnight Rhythm,Aurora Line,drum and bass,focused,0.88,174,0.66,0.88,0.11
+73,Solar Pulse,Night Signal,drum and bass,reflective,0.83,160,0.63,0.79,0.16
+74,Crystal Canvas,Static Bloom,drum and bass,confident,0.98,176,0.73,0.91,0.05
+81,Solar Horizon,Aurora Line,edm,reflective,0.81,120,0.68,0.84,0.17
+82,Crystal Echo,Night Signal,edm,confident,0.96,136,0.78,0.95,0.06
+83,Urban Boulevard,Static Bloom,edm,nostalgic,0.88,122,0.73,0.87,0.14
+84,Wild Circuit,Glass Motel,edm,euphoric,0.97,145,0.80,0.98,0.05
+56,Velvet Horizon,River Theory,folk,chill,0.30,70,0.59,0.45,0.89
+57,Silver Echo,Nova Harbor,folk,intense,0.48,86,0.54,0.51,0.78
+58,Golden Boulevard,City Script,folk,relaxed,0.24,71,0.60,0.45,0.92
+59,Lunar Circuit,Paper Atlas,folk,moody,0.34,77,0.49,0.49,0.88
+91,Urban Letters,Night Signal,funk,nostalgic,0.68,104,0.75,0.83,0.27
+92,Wild Memory,Static Bloom,funk,euphoric,0.86,120,0.86,0.92,0.14
+93,Neon Skyline,Glass Motel,funk,happy,0.83,117,0.86,0.89,0.15
+94,Velvet Rhythm,Aurora Line,funk,chill,0.73,103,0.80,0.80,0.22
+36,Crystal Boulevard,City Script,hip hop,confident,0.74,101,0.67,0.86,0.14
+37,Urban Circuit,Paper Atlas,hip hop,nostalgic,0.66,94,0.62,0.77,0.22
+38,Wild Letters,River Theory,hip hop,euphoric,0.84,110,0.73,0.86,0.09
+39,Neon Memory,Nova Harbor,hip hop,happy,0.72,100,0.68,0.86,0.15
+41,Urban Letters,Aurora Line,house,nostalgic,0.78,123,0.74,0.86,0.18
+42,Wild Memory,Night Signal,house,euphoric,0.96,139,0.85,0.94,0.05
+43,Neon Skyline,Static Bloom,house,happy,0.93,129,0.85,0.91,0.06
+44,Velvet Rhythm,Glass Motel,house,chill,0.83,115,0.79,0.83,0.13
+31,Solar Horizon,Glass Motel,indie pop,reflective,0.61,108,0.68,0.68,0.39
+32,Crystal Echo,Aurora Line,indie pop,confident,0.76,131,0.78,0.80,0.28
+33,Urban Boulevard,Night Signal,indie pop,nostalgic,0.59,117,0.68,0.74,0.41
+34,Wild Circuit,Static Bloom,indie pop,euphoric,0.77,133,0.80,0.82,0.28
+21,Lunar Skyline,Static Bloom,jazz,moody,0.39,92,0.55,0.54,0.77
+22,Midnight Rhythm,Glass Motel,jazz,focused,0.39,92,0.64,0.55,0.74
+23,Solar Pulse,Aurora Line,jazz,reflective,0.34,85,0.61,0.47,0.79
+24,Crystal Canvas,Night Signal,jazz,confident,0.49,101,0.71,0.58,0.68
+96,Wild Skyline,River Theory,latin pop,euphoric,0.95,127,0.90,0.92,0.08
+97,Neon Rhythm,Nova Harbor,latin pop,happy,0.83,117,0.85,0.92,0.13
+98,Velvet Pulse,City Script,latin pop,chill,0.73,110,0.79,0.84,0.20
+99,Silver Canvas,Paper Atlas,latin pop,intense,0.91,126,0.73,0.90,0.10
+6,Velvet Horizon,Paper Atlas,lofi,chill,0.34,77,0.58,0.54,0.82
+7,Silver Echo,River Theory,lofi,intense,0.43,93,0.48,0.63,0.76
+8,Golden Boulevard,Nova Harbor,lofi,relaxed,0.28,71,0.59,0.55,0.85
+9,Lunar Circuit,City Script,lofi,moody,0.38,77,0.48,0.58,0.81
+51,Neon Pulse,Night Signal,metal,happy,0.99,169,0.43,0.58,0.02
+52,Velvet Canvas,Static Bloom,metal,chill,0.81,155,0.33,0.52,0.13
+53,Silver Horizon,Glass Motel,metal,intense,0.99,171,0.27,0.59,0.03
+54,Golden Echo,Aurora Line,metal,relaxed,0.84,156,0.38,0.50,0.12
+1,Neon Pulse,Aurora Line,pop,happy,0.73,119,0.80,0.85,0.19
+2,Velvet Canvas,Night Signal,pop,chill,0.63,112,0.74,0.77,0.26
+3,Silver Horizon,Static Bloom,pop,intense,0.81,128,0.68,0.83,0.16
+4,Golden Echo,Glass Motel,pop,relaxed,0.66,106,0.79,0.74,0.25
+76,Midnight Pulse,City Script,r&b,focused,0.62,99,0.66,0.77,0.31
+77,Solar Canvas,Paper Atlas,r&b,reflective,0.57,85,0.63,0.69,0.36
+78,Crystal Horizon,River Theory,r&b,confident,0.63,101,0.69,0.83,0.29
+79,Urban Echo,Nova Harbor,r&b,nostalgic,0.55,87,0.64,0.74,0.38
+66,Golden Letters,Nova Harbor,reggaeton,relaxed,0.77,92,0.82,0.85,0.16
+67,Lunar Memory,City Script,reggaeton,moody,0.87,105,0.71,0.88,0.12
+68,Midnight Skyline,Paper Atlas,reggaeton,focused,0.87,105,0.80,0.90,0.10
+69,Solar Rhythm,River Theory,reggaeton,reflective,0.82,91,0.78,0.81,0.15
+11,Silver Boulevard,Night Signal,rock,intense,0.94,158,0.45,0.68,0.07
+12,Golden Circuit,Static Bloom,rock,relaxed,0.79,136,0.56,0.59,0.16
+13,Lunar Letters,Glass Motel,rock,moody,0.80,142,0.40,0.65,0.17
+14,Midnight Memory,Aurora Line,rock,focused,0.80,149,0.49,0.67,0.15
+26,Midnight Pulse,Nova Harbor,synthwave,focused,0.76,111,0.56,0.73,0.24
+27,Solar Canvas,City Script,synthwave,reflective,0.62,97,0.48,0.67,0.34
+28,Crystal Horizon,Paper Atlas,synthwave,confident,0.77,120,0.59,0.78,0.23
+29,Urban Echo,River Theory,synthwave,nostalgic,0.69,106,0.54,0.70,0.30

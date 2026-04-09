@@ -30,10 +30,70 @@ Some prompts to answer:
 You can include a simple diagram or bullet list if helpful.
 
 Answer:
-Real-world music recommendation systems usually combine many signals, such as what users clicked, skipped, replayed, and liked, plus song-level attributes like genre, mood, tempo, and energy. They score each candidate song by estimating how well it matches a listener's current taste and then rank songs from best match to weakest match. My version will prioritize transparent, content-based scoring: it will focus on matching user preferences for genre, mood, and core numeric vibe features (especially energy and valence), so the recommendations are easy to explain and debug.
+My recommender uses a transparent, rule-based scoring recipe. For each song in the catalog, it computes a match score against a user taste profile and then ranks songs from highest score to lowest score.
 
-Song features used: genre, mood, energy, tempo_bpm, valence, danceability, and acousticness.
-UserProfile features used: preferred_genre, preferred_mood, target_energy, target_tempo_bpm, and target_valence.
+Algorithm recipe:
+
+1. Read user preferences
+  - Weighted categorical preferences: `preferred_genres`, `favorite_moods`
+  - Numeric targets + tolerances: `target_energy`, `target_tempo_bpm`, `target_valence`, `target_danceability`, `target_acousticness`
+  - Optional controls: `weighting_scheme`, `excluded_genres`, `novelty_preference`, `diversity_boost`
+
+2. Score each song with additive rules
+  - Choose one weighting scheme where all feature weights sum to `1.00`:
+    - `conservative`: genre-led
+    - `balanced` (default): genre and mood close, with strong audio feature support
+    - `exploratory`: mood + audio features stronger than genre
+  - Add categorical contributions for matched genre/mood.
+  - Add numeric similarity contributions using:
+    closeness = `max(0, 1 - abs(value - target) / tolerance)`
+    then contribution = `feature_weight * closeness`.
+  - Apply guardrails with optional penalties/bonuses (`excluded_genres`, `novelty_preference`, `diversity_boost`).
+
+3. Create explanation strings
+  - Store per-feature contribution notes (for example: `genre match +2.00`, `energy proximity +0.83`).
+  - Join these notes into a human-readable reason for each recommendation.
+
+4. Rank and return top-k
+  - Sort songs by score descending.
+  - Return the top `k` songs with `(song, score, explanation)`.
+
+Song features used: `genre`, `mood`, `energy`, `tempo_bpm`, `valence`, `danceability`, and `acousticness`.
+
+Example taste profile dictionary:
+
+```python
+user_prefs = {
+  "weighting_scheme": "balanced",
+  "preferred_genres": {"house": 1.0, "synthwave": 0.6, "pop": 0.3},
+  "favorite_moods": {"euphoric": 1.0, "happy": 0.5},
+  "target_energy": 0.86,
+  "energy_tolerance": 0.18,
+  "target_tempo_bpm": 124,
+  "tempo_tolerance_bpm": 18,
+  "target_valence": 0.78,
+  "valence_tolerance": 0.20,
+  "target_danceability": 0.88,
+  "danceability_tolerance": 0.15,
+  "target_acousticness": 0.12,
+  "acousticness_tolerance": 0.18,
+  "excluded_genres": ["lofi"],
+  "novelty_preference": 0.25,
+  "diversity_boost": 0.20,
+}
+```
+
+### Design Map
+
+```mermaid
+flowchart LR
+  A[Input: User Prefs] --> B[Load songs.csv]
+  B --> C[Loop over one song at a time]
+  C --> D[Score this song with genre, mood, and audio features]
+  D --> E[Store song + score + explanation]
+  E --> F[After all songs are scored, sort by score]
+  F --> G[Output: Top K recommendations]
+```
 
 
 ---
@@ -70,6 +130,19 @@ pytest
 ```
 
 You can add more tests in `tests/test_recommender.py`.
+
+### Dataset Files (for Better Evaluation)
+
+- `data/songs.csv`: Full balanced catalog (100 songs)
+- `data/songs_train.csv`: Train-like split (80 songs)
+- `data/songs_eval.csv`: Eval-like split (20 songs)
+- `data/songs_adversarial.csv`: Hard cases that stress conflicting features
+
+Recommended workflow:
+
+1. Tune weights on `songs_train.csv`
+2. Check stability on `songs_eval.csv`
+3. Probe failure modes on `songs_adversarial.csv`
 
 ---
 

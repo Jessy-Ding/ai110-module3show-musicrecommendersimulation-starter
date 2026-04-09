@@ -1,0 +1,21 @@
+id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
+20,Crystal Pulse,River Theory,ambient,confident,0.32,70,0.64,0.47,0.87
+65,Solar Skyline,Static Bloom,blues,reflective,0.33,72,0.37,0.41,0.83
+50,Golden Horizon,Paper Atlas,classical,relaxed,0.20,59,0.52,0.20,0.98
+90,Velvet Skyline,Paper Atlas,country,chill,0.40,92,0.66,0.59,0.53
+75,Urban Horizon,Glass Motel,drum and bass,nostalgic,0.90,169,0.68,0.82,0.12
+85,Neon Letters,Aurora Line,edm,happy,0.94,135,0.80,0.95,0.07
+60,Midnight Letters,River Theory,folk,focused,0.34,77,0.58,0.50,0.86
+95,Silver Pulse,Night Signal,funk,intense,0.91,119,0.74,0.87,0.12
+40,Velvet Skyline,City Script,hip hop,chill,0.62,93,0.62,0.77,0.22
+45,Silver Pulse,Aurora Line,house,intense,0.92,138,0.69,0.92,0.08
+35,Neon Letters,Glass Motel,indie pop,happy,0.74,123,0.80,0.80,0.29
+25,Urban Horizon,Static Bloom,jazz,nostalgic,0.32,87,0.61,0.52,0.81
+100,Golden Horizon,River Theory,latin pop,relaxed,0.76,104,0.84,0.81,0.19
+10,Midnight Letters,Paper Atlas,lofi,focused,0.38,84,0.57,0.59,0.79
+55,Lunar Boulevard,Night Signal,metal,moody,0.94,162,0.27,0.53,0.08
+5,Lunar Boulevard,Aurora Line,pop,moody,0.76,119,0.68,0.78,0.21
+80,Wild Boulevard,City Script,r&b,euphoric,0.73,110,0.74,0.83,0.24
+70,Crystal Pulse,Nova Harbor,reggaeton,confident,0.88,107,0.83,0.95,0.08
+15,Solar Skyline,Night Signal,rock,reflective,0.75,135,0.46,0.58,0.20
+30,Wild Boulevard,Nova Harbor,synthwave,euphoric,0.87,122,0.65,0.78,0.17

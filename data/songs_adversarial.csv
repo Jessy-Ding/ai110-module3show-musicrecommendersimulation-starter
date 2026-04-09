@@ -1,0 +1,31 @@
+id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
+16,Golden Letters [adversarial],River Theory,ambient,relaxed,0.21,58,0.64,0.36,0.94
+64,Midnight Memory [adversarial],Night Signal,blues,focused,0.38,86,0.40,0.49,0.78
+46,Wild Skyline [adversarial],Paper Atlas,classical,euphoric,0.30,82,0.53,0.32,0.91
+90,Velvet Skyline [adversarial],Paper Atlas,country,chill,0.40,92,0.66,0.59,0.53
+71,Lunar Skyline [adversarial],Glass Motel,drum and bass,moody,0.97,167,0.62,0.84,0.08
+81,Solar Horizon [adversarial],Aurora Line,edm,reflective,0.81,120,0.68,0.84,0.17
+58,Golden Boulevard [adversarial],City Script,folk,relaxed,0.24,71,0.60,0.45,0.92
+91,Urban Letters [adversarial],Night Signal,funk,nostalgic,0.68,104,0.75,0.83,0.27
+40,Velvet Skyline [adversarial],City Script,hip hop,chill,0.62,93,0.62,0.77,0.22
+45,Silver Pulse [adversarial],Aurora Line,house,intense,0.92,138,0.69,0.92,0.08
+33,Urban Boulevard [adversarial],Night Signal,indie pop,nostalgic,0.59,117,0.68,0.74,0.41
+25,Urban Horizon [adversarial],Static Bloom,jazz,nostalgic,0.32,87,0.61,0.52,0.81
+99,Silver Canvas [adversarial],Paper Atlas,latin pop,intense,0.91,126,0.73,0.90,0.10
+8,Golden Boulevard [adversarial],Nova Harbor,lofi,relaxed,0.28,71,0.59,0.55,0.85
+53,Silver Horizon [adversarial],Glass Motel,metal,intense,0.99,171,0.27,0.59,0.03
+4,Golden Echo [adversarial],Glass Motel,pop,relaxed,0.66,106,0.79,0.74,0.25
+79,Urban Echo [adversarial],Nova Harbor,r&b,nostalgic,0.55,87,0.64,0.74,0.38
+67,Lunar Memory [adversarial],City Script,reggaeton,moody,0.87,105,0.71,0.88,0.12
+11,Silver Boulevard [adversarial],Night Signal,rock,intense,0.94,158,0.45,0.68,0.07
+30,Wild Boulevard [adversarial],Nova Harbor,synthwave,euphoric,0.87,122,0.65,0.78,0.17
+55,Lunar Boulevard [adversarial+],Night Signal,metal,moody,0.94,162,0.27,0.53,0.08
+51,Neon Pulse [adversarial+],Night Signal,metal,happy,0.99,169,0.43,0.58,0.02
+52,Velvet Canvas [adversarial+],Static Bloom,metal,chill,0.81,155,0.33,0.52,0.13
+54,Golden Echo [adversarial+],Aurora Line,metal,relaxed,0.84,156,0.38,0.50,0.12
+19,Solar Rhythm [adversarial+],Paper Atlas,ambient,reflective,0.17,58,0.54,0.35,0.98
+20,Crystal Pulse [adversarial+],River Theory,ambient,confident,0.32,70,0.64,0.47,0.87
+6,Velvet Horizon [adversarial+],Paper Atlas,lofi,chill,0.34,77,0.58,0.54,0.82
+10,Midnight Letters [adversarial+],Paper Atlas,lofi,focused,0.38,84,0.57,0.59,0.79
+22,Midnight Rhythm [adversarial+],Glass Motel,jazz,focused,0.39,92,0.64,0.55,0.74
+56,Velvet Horizon [adversarial+],River Theory,folk,chill,0.30,70,0.59,0.45,0.89

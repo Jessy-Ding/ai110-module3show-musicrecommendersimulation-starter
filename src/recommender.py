@@ -38,10 +38,7 @@ WEIGHT_SCHEMES: Dict[str, Dict[str, float]] = {
 
 @dataclass
 class Song:
-    """
-    Represents a song and its attributes.
-    Required by tests/test_recommender.py
-    """
+    """Represents one song and its features."""
     id: int
     title: str
     artist: str
@@ -55,24 +52,20 @@ class Song:
 
 @dataclass
 class UserProfile:
-    """
-    Represents a user's taste preferences.
-    Required by tests/test_recommender.py
-    """
+    """Represents a user's core taste preferences."""
     favorite_genre: str
     favorite_mood: str
     target_energy: float
     likes_acoustic: bool
 
 class Recommender:
-    """
-    OOP implementation of the recommendation logic.
-    Required by tests/test_recommender.py
-    """
+    """Implements OOP-style recommendation methods over Song objects."""
     def __init__(self, songs: List[Song]):
+        """Stores the song catalog used for recommendation."""
         self.songs = songs
 
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
+        """Returns the top-k Song objects ranked for a user profile."""
         scored: List[Tuple[Song, float]] = []
         for song in self.songs:
             scored.append((song, _score_song_for_user(song, user)))
@@ -81,6 +74,7 @@ class Recommender:
         return [song for song, _ in scored[:k]]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
+        """Builds a short natural-language explanation for one recommendation."""
         reasons: List[str] = []
 
         if song.genre.lower() == user.favorite_genre.lower():
@@ -103,6 +97,7 @@ class Recommender:
 
 
 def _closeness(value: float, target: float, tolerance: float) -> float:
+    """Returns normalized similarity based on target distance and tolerance."""
     if tolerance <= 0:
         return 1.0 if value == target else 0.0
     distance = abs(value - target)
@@ -110,15 +105,18 @@ def _closeness(value: float, target: float, tolerance: float) -> float:
 
 
 def _weighted_lookup(name: str, weights: Dict[str, float]) -> float:
+    """Looks up a lowercase key in a weights mapping and returns a float."""
     return float(weights.get(name.lower(), 0.0))
 
 
 def _get_weight_scheme(user_prefs: Dict) -> Dict[str, float]:
+    """Resolves the active weighting scheme from user preferences."""
     scheme_name = str(user_prefs.get("weighting_scheme", "balanced")).lower()
     return WEIGHT_SCHEMES.get(scheme_name, WEIGHT_SCHEMES["balanced"])
 
 
 def _score_song_for_user(song: Song, user: UserProfile) -> float:
+    """Scores a Song object for the OOP recommender path."""
     scheme = WEIGHT_SCHEMES["balanced"]
     score = 0.0
 
@@ -135,10 +133,7 @@ def _score_song_for_user(song: Song, user: UserProfile) -> float:
     return score
 
 def load_songs(csv_path: str) -> List[Dict]:
-    """
-    Loads songs from a CSV file.
-    Required by src/main.py
-    """
+    """Loads songs from CSV and returns typed song dictionaries."""
     songs: List[Dict] = []
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -161,6 +156,7 @@ def load_songs(csv_path: str) -> List[Dict]:
 
 
 def _score_song_dict(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
+    """Scores one song dict and returns both score and explanation reasons."""
     scheme = _get_weight_scheme(user_prefs)
     score = 0.0
     reasons: List[str] = []
@@ -237,10 +233,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     return _score_song_dict(user_prefs, song)
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
-    """
-    Functional implementation of the recommendation logic.
-    Required by src/main.py
-    """
+    """Ranks all songs by score and returns top-k with explanation strings."""
     scored: List[Tuple[Dict, float, str]] = [
         (
             song,

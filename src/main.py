@@ -18,6 +18,7 @@ except ImportError:
 
 
 def main() -> None:
+    """Runs the CLI demo: load songs, score them, and print top recommendations."""
     songs = load_songs("data/songs.csv")
     print(f"Loaded songs: {len(songs)}")
 

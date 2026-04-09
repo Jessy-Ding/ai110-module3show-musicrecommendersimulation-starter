@@ -95,6 +95,40 @@ flowchart LR
   F --> G[Output: Top K recommendations]
 ```
 
+### Evaluation Plan
+
+To make the recommendation behavior easier to study, I use three related dataset views from the same balanced catalog:
+
+- `data/songs_train.csv`: tune the weighting scheme and check the main ranking behavior
+- `data/songs_eval.csv`: verify the recommendations still look reasonable on a held-out split
+- `data/songs_adversarial.csv`: stress-test cases where audio features or mood/genre signals conflict
+
+This setup helps answer three questions: does the scoring rule work on the main catalog, does it generalize to unseen songs, and where does it break down when the signals disagree?
+
+### Algorithm Recipe
+
+My final scoring recipe uses a balanced, weighted sum of genre, mood, and audio similarity:
+
+1. Choose a weighting scheme
+  - `conservative`: genre-led
+  - `balanced` (default): genre and mood stay close, while audio features still matter
+  - `exploratory`: mood and audio similarity matter more than genre
+
+2. Score one song at a time
+  - Add a genre-match contribution when the song's genre overlaps with the user's preferred genres.
+  - Add a mood-match contribution when the song's mood overlaps with the user's favorite moods.
+  - For each numeric feature, compute closeness with:
+    `closeness = max(0, 1 - abs(value - target) / tolerance)`
+    then multiply by the feature weight for that scheme.
+  - Optionally subtract a small penalty for excluded genres and add a small novelty/diversity bump when requested.
+
+3. Rank the full catalog
+  - Score every song in the CSV.
+  - Sort all songs from highest score to lowest score.
+  - Return the top `k` songs as the final recommendation list.
+
+Potential bias note: This system can still over-prioritize genre if the genre weights are too high, which could hide songs that match the user's mood or audio preferences very well. It may also reflect whatever genres and moods are most common in the catalog, so rare styles can be under-recommended unless the exploratory or diversity settings are used.
+
 
 ---
 
@@ -130,19 +164,6 @@ pytest
 ```
 
 You can add more tests in `tests/test_recommender.py`.
-
-### Dataset Files (for Better Evaluation)
-
-- `data/songs.csv`: Full balanced catalog (100 songs)
-- `data/songs_train.csv`: Train-like split (80 songs)
-- `data/songs_eval.csv`: Eval-like split (20 songs)
-- `data/songs_adversarial.csv`: Hard cases that stress conflicting features
-
-Recommended workflow:
-
-1. Tune weights on `songs_train.csv`
-2. Check stability on `songs_eval.csv`
-3. Probe failure modes on `songs_adversarial.csv`
 
 ---
 

@@ -188,18 +188,18 @@ def _score_song_dict(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     if genre_weight > 0:
         contribution = scheme["genre_match"] * min(1.0, genre_weight)
         score += contribution
-        reasons.append(f"genre match +{contribution:.2f}")
+        reasons.append(f"genre match (+{contribution:.2f})")
 
     mood_weight = _weighted_lookup(mood, favorite_moods)
     if mood_weight > 0:
         contribution = scheme["mood_match"] * min(1.0, mood_weight)
         score += contribution
-        reasons.append(f"mood match +{contribution:.2f}")
+        reasons.append(f"mood match (+{contribution:.2f})")
 
     if genre in excluded_genres:
         contribution = -0.20
         score += contribution
-        reasons.append(f"excluded genre {contribution:.2f}")
+        reasons.append(f"excluded genre ({contribution:.2f})")
 
     numeric_specs = [
         ("energy", "target_energy", "energy_tolerance", "energy_proximity", 0.25),
@@ -217,7 +217,7 @@ def _score_song_dict(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
             closeness = _closeness(value, target, tolerance)
             contribution = scheme[weight_key] * closeness
             score += contribution
-            reasons.append(f"{feature} proximity +{contribution:.2f}")
+            reasons.append(f"{feature} proximity (+{contribution:.2f})")
 
     # Small exploration bump for off-profile songs when novelty is desired.
     if novelty_preference > 0 and genre_weight == 0 and mood_weight == 0:
@@ -227,36 +227,41 @@ def _score_song_dict(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
             exploration_scale = 0.08
         contribution = exploration_scale * min(1.0, novelty_preference)
         score += contribution
-        reasons.append(f"novelty bonus +{contribution:.2f}")
+        reasons.append(f"novelty bonus (+{contribution:.2f})")
 
     return score, reasons
+
+
+def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
+    """Scores one song for a user and returns (score, reasons)."""
+    return _score_song_dict(user_prefs, song)
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """
     Functional implementation of the recommendation logic.
     Required by src/main.py
     """
-    scored: List[Tuple[Dict, float, str]] = []
+    scored: List[Tuple[Dict, float, str]] = [
+        (
+            song,
+            score,
+            ", ".join(reasons) if reasons else "overall profile proximity",
+        )
+        for song in songs
+        for score, reasons in [score_song(user_prefs, song)]
+    ]
 
-    for song in songs:
-        score, reasons = _score_song_dict(user_prefs, song)
-        if reasons:
-            explanation = ", ".join(reasons)
-        else:
-            explanation = "overall profile proximity"
-        scored.append((song, score, explanation))
-
-    scored.sort(key=lambda item: item[1], reverse=True)
+    ranked = sorted(scored, key=lambda item: item[1], reverse=True)
 
     # Diversity boost: gently favor unseen genres in top-k when requested.
     diversity_boost = float(user_prefs.get("diversity_boost", 0.0))
     if diversity_boost <= 0:
-        return scored[:k]
+        return ranked[:k]
 
     selected: List[Tuple[Dict, float, str]] = []
     seen_genres = set()
 
-    for song, score, explanation in scored:
+    for song, score, explanation in ranked:
         genre = str(song.get("genre", "")).lower()
         adjusted = score
         if genre not in seen_genres:
@@ -266,5 +271,4 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tup
         if len(selected) >= k:
             break
 
-    selected.sort(key=lambda item: item[1], reverse=True)
-    return selected
+    return sorted(selected, key=lambda item: item[1], reverse=True)

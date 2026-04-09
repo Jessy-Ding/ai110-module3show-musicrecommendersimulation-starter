@@ -155,6 +155,11 @@ pip install -r requirements.txt
 python -m src.main
 ```
 
+### Terminal Output Screenshot
+
+
+![Terminal recommendation output](docs/images/result_recommend.png)
+
 ### Running Tests
 
 Run the starter tests with:
